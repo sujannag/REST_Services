@@ -3,3 +3,4 @@ flask
 radon
 lizard
 requests
+flask_restful
