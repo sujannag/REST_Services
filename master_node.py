@@ -6,11 +6,17 @@ from time import time
 #from git import Repo
 import requests
 from threading import Lock
+import base64
 
 #GIT_REPO_PATH = "git_repo/pacman"
 GIT_REPO_PATH = 'https://api.github.com/repos/weixsong/pacman/commits'
 GIT_REPO_FILES_PATH = 'https://api.github.com/repos/weixsong/pacman/git/trees/{}'
 #GIT_REPO_PATH = 'https://api.github.com/repos/sujannag/scalable_computing/commits'
+#GIT_REPO_PATH = 'https://api.github.com/repos/vilbeyli/Pacman/commits'
+#GIT_REPO_FILES_PATH = 'https://api.github.com/repos/vilbeyli/Pacman/git/trees/{}'
+
+user = "c3VqYW41NjE0QGdtYWlsLmNvbQ=="
+passwd = "bmFncy50ZXN0MQ=="
 
 g_total_no_of_commits = 0
 g_clients_connected_count = 0
@@ -26,6 +32,7 @@ cc_lock = Lock()
 
 app = Flask(__name__)
 api = Api(app)
+
 
 '''
 '''
@@ -96,14 +103,18 @@ def get_commits():
 	global GIT_REPO_PATH
 	global job_queue
 	
-	resp = requests.get(GIT_REPO_PATH)
-	#print resp
+	#resp = requests.get(GIT_REPO_PATH)
+	resp = requests.get(GIT_REPO_PATH, auth=(base64.b64decode(user), base64.b64decode(passwd)))
+#	requests.get('https://api.github.com/user', auth=('user', 'pass'))
+	print(resp)
 
 	while 'next' in resp.links:
 		for item in resp.json():
 			job_queue.append(item['sha'])
-		resp = requests.get(resp.links['next']['url'])
-	#print(resp.json())
+		#resp = requests.get(resp.links['next']['url'])
+		resp = requests.get(resp.links['next']['url'], auth=(base64.b64decode(user), base64.b64decode(passwd)))
+		print resp
+	print(resp.json())
 
 	# store the commits in a queue
 	for item in resp.json():
