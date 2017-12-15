@@ -117,13 +117,10 @@ class client_node:
 		i = lizard.analyze_file('./tmp/0.py')
 		print("CC",i.average_cyclomatic_complexity)
 		'''
-<<<<<<< HEAD
+
 		'''
 		# Using Lizard
-=======
-		# Using Lizard
-		'''
->>>>>>> 237ae98760e222491f246d74d26f3fd1b24051c6
+
 		print("Start Lizard testing")
 		i = lizard.analyze_file("./tmp/0.py")
 		print (i.__dict__)
@@ -131,10 +128,6 @@ class client_node:
 		
 		print("End Lizard testing")
 		'''
-<<<<<<< HEAD
-
-=======
->>>>>>> 237ae98760e222491f246d74d26f3fd1b24051c6
 		results = CCHarvester(self.cc_path, self.cc_config)._to_dicts()
 		if results == {}:
 			rmtree('tmp')
@@ -163,11 +156,7 @@ class client_node:
 if __name__ == '__main__':
 	client = client_node()
 	
-<<<<<<< HEAD
-	# Get the jobs from the master node
-=======
 	# Get the jobs from the master
->>>>>>> 237ae98760e222491f246d74d26f3fd1b24051c6
 	client.compute_cc()
 
 
