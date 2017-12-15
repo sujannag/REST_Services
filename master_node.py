@@ -58,6 +58,7 @@ class master_node(Resource):
 
 	def put(self):
 		
+		global g_end_time
 		'''
 		get the calculated Cyclomatic complexity from the client nodes 
 		and store it in a list
@@ -72,8 +73,7 @@ class master_node(Resource):
 			Check if all the commits have been exhausted, if yes shutdown the master node.
 			'''
 			if(cc_count == g_total_no_of_commits):
-					shutdown_master()
-					return '', 503
+				return '', 503
 			return '', 204
 
 class setup_node(Resource):
@@ -123,6 +123,11 @@ def get_commits():
 	#print repo
 	#sha = repo.head.reference.commit.hexsha
 	
+<<<<<<< HEAD
+def plot_graph():
+	print("Plot Graph")
+
+=======
 	
 
 def calculate_average_cc():
@@ -140,6 +145,7 @@ def shutdown_master():
 		raise RuntimeError('Not running with the Werkzeug Server')
 	func()
 
+>>>>>>> 237ae98760e222491f246d74d26f3fd1b24051c6
 api.add_resource(master_node, '/')
 api.add_resource(setup_node, '/init')
 
@@ -157,7 +163,6 @@ if __name__ == '__main__':
 	# Start assigning tasks to the workers
 	app.run(host='0.0.0.0', port=5000, debug=False)
 
-	# end the time
 	end_time = time()
 
 	# Calculate the total time required
@@ -167,7 +172,11 @@ if __name__ == '__main__':
 	print("Clients:", g_clients_connected_count)
 	print("Time Required:", delta_time)
 
+<<<<<<< HEAD
+	print("\nKill the Server\n")
+=======
 	print("\nShutdown Server\n")
+>>>>>>> 237ae98760e222491f246d74d26f3fd1b24051c6
 
 	# get the data onto a file to plot it out
 	with open('time_required.txt', 'a') as time_required:
