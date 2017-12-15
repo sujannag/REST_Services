@@ -2,7 +2,7 @@
 
 import requests
 import os
-#import lizard
+import lizard
 from re import match
 from radon.complexity import SCORE
 from radon.cli.harvest import CCHarvester
@@ -97,15 +97,15 @@ class client_node:
 			print("Temp Directory already present!!")
 		
 		for item in file_tree:
-			
-			if item['type'] == 'blob':
+			if item['type'] == 'blob' and self.is_py_file(item['path']):
+			#if item['type'] == 'blob':
 				blob_urls.append(item['url'])
 
 
-		
+		headers = {'Accept': 'application/vnd.github.v3.raw'}
 		for index, url in enumerate(blob_urls):
 			#print (index, url)
-			resp = requests.get(url, auth=(base64.b64decode(user), base64.b64decode(passwd)))
+			resp = requests.get(url, headers=headers, auth=(base64.b64decode(user), base64.b64decode(passwd)))
 			with open('./tmp/{}.py'.format(index), 'w') as tmp_file:
 				count = count + 1
 				tmp_file.write(resp.text)
@@ -116,6 +116,15 @@ class client_node:
 		'''
 		i = lizard.analyze_file('./tmp/0.py')
 		print("CC",i.average_cyclomatic_complexity)
+		'''
+		# Using Lizard
+		'''
+		print("Start Lizard testing")
+		i = lizard.analyze_file("./tmp/0.py")
+		print (i.__dict__)
+		print i.function_list[0].__dict__
+		
+		print("End Lizard testing")
 		'''
 		results = CCHarvester(self.cc_path, self.cc_config)._to_dicts()
 		if results == {}:
@@ -138,13 +147,14 @@ class client_node:
 		print ("length of the results", len(results))
 		return total_cc / len(results)
 
-
+	def is_py_file(self, filename):
+		return True if match('.*\.py', filename) is not None else False
 
 
 if __name__ == '__main__':
 	client = client_node()
 	
-	# Get the jobs fr
+	# Get the jobs from the master
 	client.compute_cc()
 
 

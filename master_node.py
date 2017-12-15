@@ -11,7 +11,6 @@ import base64
 #GIT_REPO_PATH = "git_repo/pacman"
 GIT_REPO_PATH = 'https://api.github.com/repos/weixsong/pacman/commits'
 GIT_REPO_FILES_PATH = 'https://api.github.com/repos/weixsong/pacman/git/trees/{}'
-#GIT_REPO_PATH = 'https://api.github.com/repos/sujannag/scalable_computing/commits'
 #GIT_REPO_PATH = 'https://api.github.com/repos/vilbeyli/Pacman/commits'
 #GIT_REPO_FILES_PATH = 'https://api.github.com/repos/vilbeyli/Pacman/git/trees/{}'
 
@@ -105,7 +104,6 @@ def get_commits():
 	
 	#resp = requests.get(GIT_REPO_PATH)
 	resp = requests.get(GIT_REPO_PATH, auth=(base64.b64decode(user), base64.b64decode(passwd)))
-#	requests.get('https://api.github.com/user', auth=('user', 'pass'))
 	print(resp)
 
 	while 'next' in resp.links:
@@ -129,12 +127,18 @@ def get_commits():
 
 def calculate_average_cc():
 	print("Average CC")
+	
+	global g_clients_connected_count
 
 def plot_graph():
 	print("Plot Graph")
 
 def shutdown_master():
 	print "shutdown master"
+	func = request.environ.get('werkzeug.server.shutdown')
+	if func is None:
+		raise RuntimeError('Not running with the Werkzeug Server')
+	func()
 
 api.add_resource(master_node, '/')
 api.add_resource(setup_node, '/init')
@@ -160,7 +164,15 @@ if __name__ == '__main__':
 	delta_time = end_time - start_time
 	print delta_time
 
-	# Plot the graphs
+	print("Clients:", g_clients_connected_count)
+	print("Time Required:", delta_time)
+
+	print("\nShutdown Server\n")
+
+	# get the data onto a file to plot it out
+	with open('time_required.txt', 'a') as time_required:
+		time_required.write('Clients: {}\n Time: {}\n'.format(g_clients_connected_count, delta_time))
+		
 
 
 '''
